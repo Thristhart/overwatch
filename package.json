@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Thristhart/overwatch",
   "dependencies": {
+    "express": "^4.10.6",
     "socket.io": "^1.2.1"
   }
 }
