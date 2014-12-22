@@ -15,6 +15,17 @@ passport.use('local-login', new LocalStrategy(
     });
   })
 );
+passport.use('local-register', new LocalStrategy(
+  function(username, password, done) {
+    User.register(username, password, function(err, user) {
+      if(err)
+        return done(err);
+      if(!user)
+        return done(null, false, { message: "User " + username + " already exists" });
+      return done(null, user);
+    });
+  })
+);
 
 passport.serializeUser(function(user, done) {
   console.log(user);

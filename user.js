@@ -22,9 +22,10 @@ User.findByUsername = function(username, callback) {
 User.register = function(username, password, callback) {
   db.sismember("overwatch:usernames", username).then(function(usernameExists) {
     if(usernameExists)
-      return callback(new Error("Username already exists"), null);
+      return callback(null, false);
     db.hmset("overwatch:user:" + username, {passHash: password.length}).then(function() {
-      callback(null);
+      db.sadd("overwatch:usernames", username);
+      User.findByUsername(username, callback);
     });
   },
   function(err) {

@@ -20,15 +20,23 @@ router.get('/', function(req, res) {
   res.render('index.html');
 });
 router.get('/login', function(req, res) {
-  console.log(req.session);
-  console.log(req.flash);
   res.render('login.html');
+});
+router.get('/register', function(req, res) {
+  res.render('register.html');
 });
 // TODO: sanitize input
 router.post('/login', 
   passport.authenticate('local-login', { 
     successRedirect: "/overwatch",
     failureRedirect: "/overwatch/login",
+    failureFlash: true 
+  })
+);
+router.post('/register', 
+  passport.authenticate('local-register', { 
+    successRedirect: "/overwatch",
+    failureRedirect: "/overwatch/register",
     failureFlash: true 
   })
 );
