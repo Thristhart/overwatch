@@ -1,14 +1,29 @@
-// TODO: Replace with a database model and an actual hashing algorithm
+// TODO: Replace hashing with an actual hash algorithm
+var redis = require('then-redis');
+var db = redis.createClient();
 
 var User = {};
 
 
-var store = {"tom": {passHash: 5}};
-
 User.findByUsername = function(username, callback) {
-  if(!store[username])
-    callback(null, null);
-  callback(null, new UserObject(username, store[username]));
+  db.sismember("overwatch:usernames", username).then(function(usernameExists) {
+    if(!usernameExists)
+      return callback(null, null);
+    db.hgetall("overwatch:user:" + username).then(function(userData) {
+      var uObj = new UserObject(username, userData);
+      callback(null, uObj);
+    });
+  });
+};
+
+User.register = function(username, password, callback) {
+  db.sismember("overwatch:usernames", username).then(function(usernameExists) {
+    if(usernameExists)
+      return callback(new Error("Username already exists"), null);
+    db.hmset("overwatch:user:" + username, {passHash: password.length}).then(function() {
+      callback(null, true);
+    });
+  });
 };
 
 function UserObject(username, data) {
