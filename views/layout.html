@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <meta charset=utf-8>
+  <head>
+    <title>{% block title %}Overwatch{% endblock %}</title>
+    <link rel="stylesheet" href="global.css" />
+    {% block stylesheets %}
+    {% endblock %}
+  </head>
+  <body>
+    <nav>
+      <ul>
+        <li><a href="/overwatch/">Home</a></li>
+        {% if user %}
+        <li><a href="/overwatch/profile">Profile</a></li>
+        {% else %}
+        <li><a href="/overwatch/login">Log in</a></li>
+        {% endif %}
+        {% block nav %}
+        {% endblock %}
+      </ul>
+    </nav>
+    <main>
+    {% block content %}
+    {% endblock %}
+    </main>
+  </body>
+</html>
