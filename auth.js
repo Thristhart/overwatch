@@ -28,15 +28,10 @@ passport.use('local-register', new LocalStrategy(
 );
 
 passport.serializeUser(function(user, done) {
-  console.log(user);
   done(null, user.username);
 });
 passport.deserializeUser(function(identifier, done) {
-  User.findByUsername(identifier, function(err, user) {
-    if(err)
-      return done(err);
-    return done(null, user);
-  });
+  User.findByUsername(identifier, done);
 });
 
 

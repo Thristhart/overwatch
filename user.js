@@ -1,6 +1,7 @@
 // TODO: Replace hashing with an actual hash algorithm
 var redis = require('then-redis');
 var db = redis.createClient();
+var bcrypt = require('bcrypt');
 
 var User = {};
 
@@ -23,7 +24,8 @@ User.register = function(username, password, callback) {
   db.sismember("overwatch:usernames", username).then(function(usernameExists) {
     if(usernameExists)
       return callback(null, false);
-    db.hmset("overwatch:user:" + username, {passHash: password.length}).then(function() {
+    var passHash = bcrypt.hashSync(password, 8);
+    db.hmset("overwatch:user:" + username, {passHash: passHash}).then(function() {
       db.sadd("overwatch:usernames", username);
       User.findByUsername(username, callback);
     });
@@ -37,7 +39,7 @@ function UserObject(username, data) {
   this.username = username;
   this.passHash = data.passHash;
   this.checkPasswordHash = function(pass) {
-    return pass.length == this.passHash;
+    return bcrypt.compareSync(pass, this.passHash);
   };
 }
 
