@@ -16,6 +16,10 @@ router.use(session({
 router.use(passport.initialize());
 router.use(passport.session());
 
+router.use(function(req, res, next) {
+  res.locals.user = req.user;
+  next();
+});
 router.get('/', function(req, res) {
   res.render('index.html');
 });
