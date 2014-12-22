@@ -13,6 +13,9 @@ User.findByUsername = function(username, callback) {
       var uObj = new UserObject(username, userData);
       callback(null, uObj);
     });
+  },
+  function(err) {
+    callback(err);
   });
 };
 
@@ -21,8 +24,11 @@ User.register = function(username, password, callback) {
     if(usernameExists)
       return callback(new Error("Username already exists"), null);
     db.hmset("overwatch:user:" + username, {passHash: password.length}).then(function() {
-      callback(null, true);
+      callback(null);
     });
+  },
+  function(err) {
+    callback(err);
   });
 };
 
