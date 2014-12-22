@@ -5,7 +5,7 @@ var session = require('express-session');
 var bodyParser = require('body-parser');
 
 
-router.use(bodyParser());
+router.use(bodyParser.urlencoded({extended: false}));
 router.use(flash());
 router.use(session({
   secret: 'dev secret',
