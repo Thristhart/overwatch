@@ -18,6 +18,8 @@ router.use(passport.session());
 
 router.use(function(req, res, next) {
   res.locals.user = req.user;
+  res.locals.error = req.flash('error');
+  res.locals.message = req.flash('message');
   next();
 });
 router.get('/', function(req, res) {
