@@ -72,4 +72,19 @@ router.post('/register',
   })
 );
 
+// last middleware, therefore nothing else has succeeded on this route
+router.use(function(req, res, next) {
+  res.status(404);
+  res.format({
+    text: function() {
+      res.send("404 Not Found");
+    },
+    html: function() {
+      res.render("404.html");
+    },
+    json: function() {
+      res.send({ error: 404 });
+    }
+  });
+});
 module.exports = router;
