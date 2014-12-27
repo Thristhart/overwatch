@@ -34,5 +34,12 @@ passport.deserializeUser(function(identifier, done) {
   User.findByUsername(identifier, done);
 });
 
+passport.requireLogin = function(req, res, next) {
+  if(req.user)
+    return next();
+  req.session.postLoginTarget = req.baseUrl + req.url;
+  res.redirect("/overwatch/login");
+};
+
 
 module.exports = passport;

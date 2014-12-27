@@ -32,12 +32,37 @@ router.get('/register', function(req, res) {
   res.render('register.html');
 });
 // TODO: sanitize input
-router.post('/login', 
-  passport.authenticate('local-login', { 
-    successRedirect: "/overwatch",
-    failureRedirect: "/overwatch/login",
-    failureFlash: true 
-  })
+router.post('/login', function(req, res, next) {
+    passport.authenticate('local-login', {
+      failureRedirect: req.baseUrl + "/login",
+      failureFlash: true
+    })(req, res, next);
+  },
+  function(req, res, next) {
+    if(req.session.postLoginTarget) {
+      res.redirect(req.session.postLoginTarget);
+      delete(req.session.postLoginTarget);
+    }
+    else {
+      res.redirect(req.baseUrl + "/");
+    }
+  }
+);
+router.post('/register', function(req, res, next) {
+    passport.authenticate('local-register', { 
+      failureRedirect: req.baseUrl + "/register",
+      failureFlash: true 
+    })(req, res, next);
+  },
+  function(req, res, next) {
+    if(req.session.postLoginTarget) {
+      res.redirect(req.session.postLoginTarget);
+      delete(req.session.postLoginTarget);
+    }
+    else {
+      res.redirect(req.baseUrl + "/");
+    }
+  }
 );
 router.post('/register', 
   passport.authenticate('local-register', { 
