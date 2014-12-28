@@ -37,6 +37,7 @@ passport.deserializeUser(function(identifier, done) {
 passport.requireLogin = function(req, res, next) {
   if(req.user)
     return next();
+  req.flash("error", "You must be logged in to access that!");
   req.session.postLoginTarget = req.baseUrl + req.url;
   res.redirect("/overwatch/login");
 };
