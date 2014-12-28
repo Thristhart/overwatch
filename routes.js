@@ -4,6 +4,8 @@ var flash = require('connect-flash');
 var session = require('express-session');
 var bodyParser = require('body-parser');
 
+var games = require('./games');
+
 
 router.use(bodyParser.urlencoded({extended: false}));
 router.use(flash());
@@ -64,12 +66,38 @@ router.post('/register', function(req, res, next) {
     }
   }
 );
-router.post('/register', 
-  passport.authenticate('local-register', { 
-    successRedirect: "/overwatch",
-    failureRedirect: "/overwatch/register",
-    failureFlash: true 
-  })
+router.all('/game/*', passport.requireLogin);
+router.get('/game/new', function(req, res) {
+  res.render("newGame.html");
+});
+router.post('/game/new', function(req, res, next) {
+  games.newGame(function(err, game) {
+    if(err)
+      return next(err);
+    if(req.body.role == "agent")
+      game.agent = req.user.username;
+    else if(req.body.role == "overwatch")
+      game.overwatch = req.user.username;
+
+    games.saveGame(game).then(function() {
+      res.redirect(req.baseUrl + "/game/" + game.id);
+    });
+  });
+});
+
+router.get('/game/:id', 
+  function(req, res, next) {
+    var id = req.params.id;
+    games.getGame(id, function(err, game) {
+      if(err || !game)
+        return next(err);
+      res.render('game.html', {
+        id: game.id,
+        overwatch: game.overwatch,
+        agent: game.agent
+      });
+    });
+  }
 );
 
 // last middleware, therefore nothing else has succeeded on this route

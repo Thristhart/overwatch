@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<form method="post">
+  <label for="role">Your role:</label>
+  <input type="radio" name="role" value="overwatch" checked />Overwatch
+  <input type="radio" name="role" value="agent" />Agent
+  <input type="submit" value="Create game" />
+</form>
+{% endblock %}
