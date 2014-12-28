@@ -30,7 +30,7 @@ games.saveGame = function(game, callback) {
   return db.hmset("overwatch:game:" + game.id, game)
     .nodeify(callback)
     .then(function() { 
-      //games.cache[game.id] = game; 
+      games.cache[game.id] = game; 
     });
 };
 
