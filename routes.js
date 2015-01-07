@@ -3,6 +3,7 @@ var passport = require('./auth');
 var flash = require('connect-flash');
 var session = require('express-session');
 var bodyParser = require('body-parser');
+var static = require('express').static;
 
 var games = require('./games');
 
@@ -100,6 +101,8 @@ router.get('/game/:id',
     });
   }
 );
+
+router.use('/static', static(__dirname + "/static"));
 
 // last middleware, therefore nothing else has succeeded on this route
 router.use(function(req, res, next) {
