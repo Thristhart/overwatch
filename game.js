@@ -11,5 +11,14 @@ Game.create = function(id) {
   return game;
 };
 
+Game.registerNewSocket = function(state, socket) {
+  socket.on('disconnect', function() {
+    console.log("Game client disconnected");
+  });
+  socket.on('ping', function() {
+    socket.emit('pong', Date.now());
+  });
+};
+
 
 module.exports = Game;

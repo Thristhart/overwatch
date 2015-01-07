@@ -14,4 +14,9 @@ nunjucks.configure('views', {
 
 var port = 5500;
 
-app.listen(port);
+var http = require('http');
+var server = http.createServer(app);
+
+require('./sockets.js').attach(server);
+
+server.listen(port);

@@ -78,6 +78,7 @@ router.post('/game/new', function(req, res, next) {
       game.agent = req.user.username;
     else if(req.body.role == "overwatch")
       game.overwatch = req.user.username;
+    req.session.gameId = game.id;
 
     games.saveGame(game).then(function() {
       res.redirect(req.baseUrl + "/game/" + game.id);
