@@ -4,6 +4,7 @@ var transform = require('vinyl-transform');
 var uglify = require('gulp-uglify');
 var sourcemaps = require('gulp-sourcemaps');
 var concat = require('gulp-concat');
+var less = require('gulp-less');
 
 gulp.task('browserify', function() {
   var browserified = transform(function(filename) {
@@ -11,10 +12,18 @@ gulp.task('browserify', function() {
   });
 
   return gulp.src(["./client/**/*.js"])
-    .pipe(sourcemaps.init({loadMaps: true, debug: true}))
+    .pipe(sourcemaps.init({loadMaps: true}))
     .pipe(concat('game.js'))
     .pipe(browserified)
     .pipe(uglify())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./static'));
+});
+
+gulp.task('less', function() {
+  return gulp.src('./client/**/*.less')
+    .pipe(sourcemaps.init({loadMaps: true}))
+    .pipe(less())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('./static'));
 });
