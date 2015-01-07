@@ -20,12 +20,12 @@
         {% endblock %}
       </ul>
     </nav>
-    {% if error %}
+    {% if error != "" %}
     {% block error %}
     <span id="error">{{ error }}</span>
     {% endblock %}
     {% endif %}
-    {% if message %}
+    {% if message != "" %}
     {% block message %}
     <span id="message">{{ message }}</span>
     {% endblock %}
