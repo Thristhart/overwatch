@@ -87,6 +87,7 @@ router.get('/game/:id',
     games.getGame(id, function(err, game) {
       if(err || !game)
         return next(err);
+      req.session.gameId = game.id;
       res.render('game.html', {
         id: game.id,
         overwatch: game.overwatch,
