@@ -8,7 +8,7 @@ games.cache = {};
 
 games.getGame = function(id, callback) {
   if(games.cache[id])
-    return callback(null, games.cache[id]);
+    return BPromise.resolve(games.cache[id]).nodeify(callback);
   var key = "overwatch:game:" + id;
   return db.hgetall(key).then(function(game) {
     if(!game)
