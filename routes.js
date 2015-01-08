@@ -1,21 +1,15 @@
 var router = require('express').Router();
 var passport = require('./auth');
-var flash = require('connect-flash');
-var session = require('express-session');
-var bodyParser = require('body-parser');
+var middleware = require('./middleware');
 var static = require('express').static;
 
 var games = require('./games');
 
 
-router.use(bodyParser.urlencoded({extended: false}));
-router.use(flash());
-router.use(session({
-  secret: 'dev secret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { path: '/overwatch' }
-}));
+router.use(middleware.bodyParser);
+router.use(middleware.flash);
+router.use(middleware.session);
+
 router.use(passport.initialize());
 router.use(passport.session());
 
