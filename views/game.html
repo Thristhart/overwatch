@@ -1,11 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<script>
-var gameId = {{ id }};
-var agentUsername = "{{ agent }}";
-var overwatchUsername = "{{ overwatch }}";
-</script>
 <script src="/overwatch/static/game.js"></script>
 Game id: {{ id }}
 Game agent: {{ agent }}
