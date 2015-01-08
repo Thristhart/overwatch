@@ -1,17 +1,26 @@
 var socket = require('socket.io');
 var games = require('./games');
-var io;
+var Game = require('./game.js');
+var middleware = require('./middleware');
 
+var io;
 
 module.exports.attach = function(http) {
   io = socket(http, {
     path: "/overwatch/socket.io/"
   });
+  io.use(function(socket, next) {
+    socket.response = {};
+    middleware.cookieParser(socket.request, socket.response, function(err) {
+      if(err) return next(err);
+      middleware.session(socket.request, socket.response, next);
+    });
+  });
   io.use(authenticateSocket);
   io.on('connection', handleSocketConnection);
 };
 function authenticateSocket(socket, next) {
-  if(socket.request.user) {
+  if(socket.request.session.passport.user) {
     next();
   }
   else {
@@ -21,7 +30,7 @@ function authenticateSocket(socket, next) {
 function handleSocketConnection(socket) {
   socket.join(socket.request.session.gameId);
   games.getGame(socket.request.session.gameId).then(function(game) {
-    game.registerNewSocket(game, socket);
+    Game.registerNewSocket(game, socket);
   });
 }
 module.exports.io = io;
